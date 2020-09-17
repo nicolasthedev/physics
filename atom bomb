@@ -1,0 +1,88 @@
+//takes an initial velocity and angle and uses kinematic equations/trig functions to figure out
+//the position of an object with respect to time.
+var balls = [];
+var time =0;
+var numberOfObjects=0;
+function setup() {
+  createCanvas(1000, 500);
+
+
+  numberOfObjects = prompt("This is an explosion simulation. Enter an amount between 10,000 and 200,000.");
+  for(let i =0; i<numberOfObjects; i++){    
+
+  var inputVelocity = random(0,300);
+  var inputAngle = random(1,179);
+  balls.push(new CannonBall(inputVelocity,inputAngle));
+  }  
+
+}
+
+function draw() {
+	background(1000);
+
+		
+		for(let i =0; i<numberOfObjects; i++){    
+		balls[i].shoot(time);
+		}
+		
+		if(time<70){
+			
+			time+=.15;
+		}else{
+			time=0;
+		}
+	}
+ 
+
+
+   class CannonBall{
+
+	constructor(inputVelocity, inputAngle){
+		this.inputVelocity = inputVelocity;
+		this.inputAngle = inputAngle*(3.14159265358979/180);
+		this.startingX=500;
+		this.startingY=475;
+		this.velocityX;
+		this.velocityY;
+		this.totalTime
+		this.time;
+	}
+	
+	totalTime(){
+
+		this.totalTime = (2*this.velocityY)/(9.8);
+		return this.totalTime;
+	}
+	
+	currentX(){
+		this.velocityX = this.inputVelocity*cos(this.angle);
+		return velocityX*time;
+	}
+
+	currentY(){
+		this.velocityY = this.inputVelocity*sin(angle);
+		return (velocityY*time)+(.5*-9.8*time*time);
+	}
+	finalX(){
+		this.velocityX = this.inputVelocity*cos(this.angle);
+		return velocityX*totalTime;
+	}
+	finalY(){
+		this.velocityY = this.inputVelocity*sin(angle);
+		return (velocityY*totalTime)+(.5*-9.8*totalTime*totalTime);
+	}
+	
+	shoot(time){
+			this.velocityX = this.inputVelocity*cos(this.inputAngle);//Takes the x velocity from the input velocity
+			this.velocityY = this.inputVelocity*sin(this.inputAngle);//Takes the y velocity from the input velocity
+			this.time = time;
+			var x = this.velocityX*time;
+			var y = (-this.velocityY*time)+(-.5*-9.8*time*time);
+			if(y > 0){//restricts the height from going below starting position
+        y=0
+			} 
+        ellipse(x+this.startingX,y+this.startingY,1,1);
+
+		
+	}
+}
