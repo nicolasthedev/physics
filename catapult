@@ -1,0 +1,146 @@
+//takes an initial velocity and angle and uses kinematic equations/trig functions to figure out
+//the position of an object with respect to time.
+var balls = [];
+var lights = [];
+var time =0;
+var numberOfObjects;
+function setup() {
+  createCanvas(1000, 500);
+  
+  
+	
+numberOfObjects = prompt("Enter the amount of objects 1-2 here: ");
+	if(numberOfObjects>2){
+    numberOfObjects = 2;
+  }
+  if(numberOfObjects<0){
+    numberOfObjects = 1;
+  }
+            for(let i =0; i<numberOfObjects; i++){    
+            var inputVelocity = prompt("Velocity of object "+(i+1)+": 50-100 ");
+            var inputAngle = prompt("Angle of object "+(i+1)+": 0-90 ");
+            var accelerationX = prompt("X acceleration of object "+(i+1)+": -10 to 10 ");
+            var accelerationY = prompt("Y acceleration of object "+(i+1)+": -10 to 10 ");
+            balls.push(new CannonBall(inputVelocity,inputAngle, accelerationX, accelerationY));
+            
+            }
+            
+
+}
+
+function draw() {
+	background(10,20,30);
+  coordinatePlane();
+		
+		//array of [balls[1], balls[2], balls[3], balls[4], ...]
+		for(let i =0; i<numberOfObjects; i++){    
+		balls[i].shoot(time);
+		}
+		
+		if(time<40){
+			
+			time+=.0188;
+		}else{
+			time=0;
+		}
+	
+}
+
+function coordinatePlane(){
+  line(30,475,940,475);
+  stroke(255);
+  line(30,10,30,475);
+  stroke(255);
+  
+  for(let i =0; i<910;i+=10){
+  	line(40+i,480,40+i,470);
+  	stroke(255);
+    if(i%100==0){
+     ellipse(131+i,481,3,10); 
+      stroke(255);
+      if(i%100==0){
+     ellipse(20,375-i,10,3); 
+      stroke(255);
+    }
+    }
+  }
+  for(let i =455; i>0;i-=10){
+  	line(25,10+i,35,10+i);
+  	stroke(255);
+  }
+}
+
+
+
+
+   class CannonBall{ 
+
+	constructor(inputVelocity, inputAngle,accelerationX, accelerationY){
+		this.inputVelocity = inputVelocity;
+		this.inputAngle = inputAngle*(3.14159265358979/180);
+		this.startingX=30;
+		this.startingY=470;
+		this.velocityX;
+		this.velocityY;
+		this.totalTime;
+		this.time;
+    this.accelerationY=accelerationY;
+    this.accelerationX=accelerationX;
+	}
+	
+
+	totalTime(){
+		this.totalTime = (2*this.velocityY)/(9.8);
+		return this.totalTime;
+	}
+	
+	
+  getCurrentX(){
+		this.velocityX = this.inputVelocity*cos(this.inputAngle);
+		return (this.velocityX*this.time) + this.startingX;
+	}
+
+	getCurrentY(){
+    this.velocityY = this.inputVelocity*sin(this.inputAngle);
+		return (-this.velocityY*this.time)+(-.5*this.accelerationY*this.time*this.time)
+  }
+  setAccelerationX(acceleration){
+    this.accelerationX = acceleration;
+  }
+     setAccelerationY(acceleration){
+    this.accelerationY = acceleration;
+  }
+     
+	finalX(){
+		this.velocityX = this.inputVelocity*cos(this.angle);
+		return velocityX*totalTime;
+	}
+	finalY(){
+		this.velocityY = this.inputVelocity*sin(angle);
+		return (velocityY*totalTime)+(.5*this.accelerationY*totalTime*totalTime);
+	}
+     
+  setGravity(gravity){
+		this.gravity=gravity;
+  }
+	
+	shoot(time){
+			this.velocityX = this.inputVelocity*cos(this.inputAngle);//Takes the x velocity from the input velocity
+			this.velocityY = this.inputVelocity*sin(this.inputAngle);//Takes the y velocity from the input velocity
+			this.time = time;
+			var x = this.velocityX*time+(.5*this.accelerationX*time*time);
+			var y = (-this.velocityY*time)+(-.5*this.accelerationY*time*time);
+    	fill(0,random(50,150),random(50,150));
+					if(y > 0){//restricts the height from going below starting position
+        y=0
+        
+			} 
+    	if(x > 910){//restricts the horizontal from going off screen
+        x=910
+			
+			} 
+        ellipse(x+this.startingX,y+this.startingY,6,6);
+				
+  }
+}
+
